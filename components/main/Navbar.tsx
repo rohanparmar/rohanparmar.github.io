@@ -1,12 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { RxGithubLogo, RxLinkedinLogo } from 'react-icons/rx';
 import { motion } from 'framer-motion';
 import { fadeIn } from '@/utils/motion';
 
-const Navbar = () => {
+interface NavbarProps {
+  onSkippyToggle?: (enabled: boolean) => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ onSkippyToggle }) => {
   const [activeSection, setActiveSection] = useState('');
+  const [skippyEnabled, setSkippyEnabled] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,6 +36,12 @@ const Navbar = () => {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const toggleSkippy = () => {
+    const newState = !skippyEnabled;
+    setSkippyEnabled(newState);
+    onSkippyToggle?.(newState);
   };
 
   return (
@@ -90,27 +100,37 @@ const Navbar = () => {
         </div>
 
         {/* Right side - Social Links */}
-        <div className='hidden md:flex flex-row gap-6'>
+        <div className='hidden md:flex flex-row items-center gap-4'>
+          {/* Skippy Toggle Button */}
+          <button
+            onClick={toggleSkippy}
+            className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-[#0300145e] border border-[#7042f861] transition-all hover:bg-[#0300147e]"
+          >
+            <div className={`w-3 h-3 rounded-full transition-colors ${skippyEnabled ? 'bg-[#C6FE01]' : 'bg-gray-400'}`} />
+            <span className="text-sm text-gray-200">Skippy {skippyEnabled ? 'On' : 'Off'}</span>
+          </button>
+
           <a 
-            href='https://github.com' 
+            href='https://github.com/rohanparmar' 
             className='flex items-center gap-2 text-[#C6FE01] hover:brightness-110 transition-all duration-300'
             target="_blank"
             rel="noopener noreferrer"
           >
-            <RxGithubLogo className='h-5 w-5' />
             <span className='text-sm font-medium'>Github</span>
           </a>
           <a 
-            href='https://linkedin.com' 
+            href='https://www.linkedin.com/in/rohan-parmar/' 
             className='flex items-center gap-2 text-[#C6FE01] hover:brightness-110 transition-all duration-300'
             target="_blank"
             rel="noopener noreferrer"
           >
-            <RxLinkedinLogo className='h-5 w-5' />
             <span className='text-sm font-medium'>LinkedIn</span>
           </a>
         </div>
       </div>
+
+      {/* Glass effect overlay */}
+      <div className="absolute inset-0 bg-[#03001417] backdrop-blur-md -z-10" />
     </motion.div>
   );
 };
