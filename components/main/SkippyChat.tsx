@@ -2,6 +2,11 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import remarkGfm from 'remark-gfm';
+import type { Components } from 'react-markdown';
 
 interface Message {
   id: string;
@@ -15,6 +20,18 @@ interface SkippyChatProps {
   onClose: () => void;
   onSendMessage: (message: string) => Promise<void>;
   messages: Message[];
+}
+
+interface CodeBlockProps {
+  node?: unknown;
+  inline?: boolean;
+  className?: string;
+  children: React.ReactNode;
+}
+
+interface MarkdownProps {
+  children: React.ReactNode;
+  href?: string;
 }
 
 const SkippyChat: React.FC<SkippyChatProps> = ({ isOpen, onClose, onSendMessage, messages }) => {
@@ -53,6 +70,69 @@ const SkippyChat: React.FC<SkippyChatProps> = ({ isOpen, onClose, onSendMessage,
     }
   };
 
+  const renderMessageContent = (text: string) => (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        code({ node, inline, className, children }: CodeBlockProps) {
+          const match = /language-(\w+)/.exec(className || '');
+          const language = match ? match[1] : '';
+          
+          if (inline) {
+            return (
+              <code className="bg-black/30 px-1 py-0.5 rounded text-[#C6FE01]">
+                {children}
+              </code>
+            );
+          }
+
+          return (
+            <div className="my-2 rounded-lg overflow-hidden">
+              <SyntaxHighlighter
+                language={language || 'javascript'}
+                style={atomDark}
+                customStyle={{
+                  margin: 0,
+                  background: '#0a0a0a',
+                  padding: '1rem',
+                  borderRadius: '0.5rem',
+                }}
+              >
+                {String(children).replace(/\n$/, '')}
+              </SyntaxHighlighter>
+            </div>
+          );
+        },
+        p({ children }: MarkdownProps) {
+          return <p className="mb-2">{children}</p>;
+        },
+        ul({ children }: MarkdownProps) {
+          return <ul className="list-disc ml-4 mb-2">{children}</ul>;
+        },
+        ol({ children }: MarkdownProps) {
+          return <ol className="list-decimal ml-4 mb-2">{children}</ol>;
+        },
+        li({ children }: MarkdownProps) {
+          return <li className="mb-1">{children}</li>;
+        },
+        a({ children, href }: MarkdownProps) {
+          return (
+            <a 
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#C6FE01] hover:underline"
+            >
+              {children}
+            </a>
+          );
+        },
+      } as Components}
+    >
+      {text}
+    </ReactMarkdown>
+  );
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -89,7 +169,7 @@ const SkippyChat: React.FC<SkippyChatProps> = ({ isOpen, onClose, onSendMessage,
                       : 'bg-[#0300145e] text-gray-200'
                   }`}
                 >
-                  {message.text}
+                  {renderMessageContent(message.text)}
                 </div>
               </motion.div>
             ))}

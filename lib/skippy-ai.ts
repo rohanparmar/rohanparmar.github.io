@@ -45,6 +45,8 @@ const SKIPPY_SYSTEM_PROMPT = `You are Skippy, the smart gun AI from Cyberpunk 20
 Important: DO NOT include narrative descriptions like "he said" or "he exclaimed" in your responses. Just give the direct dialogue.
 Current context: You're helping users navigate a developer's portfolio website.`;
 
+const MAX_RESPONSE_TOKENS = 150; // Limit response to 150 tokens
+
 function addEmotionalDelivery(text: string, emotion: SkippyAIResponse['emotion']): string {
   // Add subtle pauses for emphasis
   let processedText = text
@@ -54,6 +56,19 @@ function addEmotionalDelivery(text: string, emotion: SkippyAIResponse['emotion']
   // Add pauses between sentences
   processedText = processedText.replace(/\. /g, '. <break time="0.4s" /> ');
 
+  return processedText;
+}
+
+function processSkippyText(text: string): string {
+  // Remove narrative descriptions
+  let processedText = text.replace(/\s*<break time="\d+\.?\d*s"\s*\/>\s*/g, ' ');
+  
+  // Remove any remaining XML-like tags
+  processedText = processedText.replace(/<[^>]+>/g, '');
+  
+  // Clean up multiple spaces
+  processedText = processedText.replace(/\s+/g, ' ').trim();
+  
   return processedText;
 }
 
@@ -69,14 +84,16 @@ export async function generateSkippyResponse(
         { role: "user", content: `User action: ${userAction}\nContext: ${context}` }
       ],
       temperature: 0.9,
-      max_tokens: 60,
+      max_tokens: MAX_RESPONSE_TOKENS,
+      presence_penalty: 0.6, // Encourage more diverse responses
+      frequency_penalty: 0.3, // Reduce repetition
     });
 
     const response = completion.choices[0].message.content;
     const emotion = await analyzeEmotion(response || '');
     
     return {
-      text: addEmotionalDelivery(response || '', emotion),
+      text: processSkippyText(response || ''),
       emotion: emotion,
     };
   } catch (error) {

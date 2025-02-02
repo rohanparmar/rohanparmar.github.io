@@ -22,6 +22,9 @@ interface SkippyAssistantProps {
   enabled?: boolean;
 }
 
+const MAX_MESSAGES_PER_SESSION = 3;
+const SESSION_STORAGE_KEY = 'skippy_message_count';
+
 const SkippyAssistant: React.FC<SkippyAssistantProps> = ({ enabled = true }) => {
   console.log('SkippyAssistant rendering, enabled:', enabled);
 
@@ -30,6 +33,7 @@ const SkippyAssistant: React.FC<SkippyAssistantProps> = ({ enabled = true }) => 
     isSpeaking: false,
     currentAnimation: 'idle',
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const [chatHistory, setChatHistory] = useState<Array<{
     id: string;
@@ -52,6 +56,12 @@ const SkippyAssistant: React.FC<SkippyAssistantProps> = ({ enabled = true }) => 
   const isSpeaking = useRef<boolean>(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const isInitialMount = useRef(true);
+  const [messageCount, setMessageCount] = useState<number>(() => {
+    if (typeof window !== 'undefined') {
+      return parseInt(sessionStorage.getItem(SESSION_STORAGE_KEY) || '0');
+    }
+    return 0;
+  });
 
   // Set up intersection observers for different sections
   const [heroRef, heroInView] = useInView({ threshold: 0.5 });
@@ -95,6 +105,12 @@ const SkippyAssistant: React.FC<SkippyAssistantProps> = ({ enabled = true }) => 
       }));
     }
   }, [enabled]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(SESSION_STORAGE_KEY, messageCount.toString());
+    }
+  }, [messageCount]);
 
   const addToChatHistory = (message: SkippyResponse) => {
     setChatHistory(prev => {
@@ -206,7 +222,24 @@ const SkippyAssistant: React.FC<SkippyAssistantProps> = ({ enabled = true }) => 
   }, [projectsInView, enabled]);
 
   const handleChatMessage = async (message: string) => {
+    if (messageCount >= MAX_MESSAGES_PER_SESSION && !isChatOpen) {
+      addToChatHistory({
+        text: "I've reached my message limit for this session. Please open the chat to continue our conversation!",
+        emotion: 'concerned'
+      });
+      return;
+    }
+
     try {
+      // Add user message to chat history
+      setChatHistory(prev => [...prev, {
+        id: Date.now().toString(),
+        text: message,
+        sender: 'user'
+      }]);
+
+      setIsLoading(true);
+
       const response = await fetch('/api/skippy', {
         method: 'POST',
         headers: {
@@ -222,38 +255,97 @@ const SkippyAssistant: React.FC<SkippyAssistantProps> = ({ enabled = true }) => 
         throw new Error('Failed to get response');
       }
 
-      const data = await response.json();
-      
-      // Add user message to chat history
-      setChatHistory(prev => [...prev, {
-        id: Date.now().toString(),
-        text: message,
-        sender: 'user'
-      }]);
+      if (!response.body) {
+        throw new Error('No response body');
+      }
 
-      // Add Skippy's response to chat history
-      addToChatHistory({
-        text: data.text,
-        emotion: data.emotion
-      });
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let audioChunks: string[] = [];
 
-      // Play audio response
-      if (data.audioBase64) {
-        const audioBlob = await fetch(`data:audio/mpeg;base64,${data.audioBase64}`).then(r => r.blob());
-        const audioUrl = URL.createObjectURL(audioBlob);
-        if (audioRef.current) {
-          audioRef.current.src = audioUrl;
-          await audioRef.current.play();
-          await new Promise(resolve => {
-            if (audioRef.current) {
-              audioRef.current.onended = resolve;
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        
+        // Process complete messages
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || ''; // Keep the last incomplete line in the buffer
+
+        for (const line of lines) {
+          if (line.trim() === '') continue;
+          
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(5));
+              
+              if (data.type === 'text') {
+                addToChatHistory(data.content);
+              } else if (data.type === 'audio') {
+                audioChunks.push(data.content);
+                
+                // If this is the last chunk, play the audio
+                if (data.isLastChunk && hasUserInteracted) {
+                  const fullAudioBase64 = audioChunks.join('');
+                  const audioBlob = await fetch(`data:audio/mpeg;base64,${fullAudioBase64}`).then(r => r.blob());
+                  const audioUrl = URL.createObjectURL(audioBlob);
+                  
+                  if (audioRef.current) {
+                    audioRef.current.src = audioUrl;
+                    try {
+                      await audioRef.current.play();
+                      await new Promise(resolve => {
+                        if (audioRef.current) {
+                          audioRef.current.onended = resolve;
+                        }
+                      });
+                    } catch (error) {
+                      console.log('Audio playback not allowed yet - waiting for user interaction');
+                    } finally {
+                      URL.revokeObjectURL(audioUrl);
+                      audioChunks = []; // Clear the chunks array
+                    }
+                  }
+                }
+              } else if (data.type === 'error') {
+                throw new Error(data.content);
+              }
+            } catch (error) {
+              console.warn('Error parsing SSE message:', error);
+              continue; // Skip malformed messages
             }
-          });
-          URL.revokeObjectURL(audioUrl);
+          }
         }
+      }
+
+      // Process any remaining complete messages in the buffer
+      if (buffer.trim() !== '') {
+        try {
+          const line = buffer.trim();
+          if (line.startsWith('data: ')) {
+            const data = JSON.parse(line.slice(5));
+            if (data.type === 'text') {
+              addToChatHistory(data.content);
+            }
+          }
+        } catch (error) {
+          console.warn('Error parsing final SSE message:', error);
+        }
+      }
+
+      if (!isChatOpen) {
+        setMessageCount(prev => prev + 1);
       }
     } catch (error) {
       console.error('Error in chat:', error);
+      addToChatHistory({
+        text: "Sorry, I encountered an error. Please try again!",
+        emotion: 'concerned'
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 

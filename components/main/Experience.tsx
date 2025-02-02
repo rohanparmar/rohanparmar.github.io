@@ -17,6 +17,18 @@ interface Experience {
 
 const experiences: Experience[] = [
   {
+    company: 'Docula',
+    role: 'Co-founder',
+    shortDescription: 'Building an academic workspace with AI agents for course planning, exam generation, and concept podcasts.',
+    description: `• Built an academic workspace using NextJS for the frontend (Vercel), and FastAPI for the backend (Render). Used Supabase with PGVector for embeddings, managed using Drizzle.
+
+• Created 3 AI Agents for course planning, exam generation and concept podcast creation using Autogen and Pydantic, and deployed them on Modal for web inference.
+
+• Served the interactions using OpenRouter and Langchain. Utilised Langfuse to monitor outputs and cost.`,
+    date: 'October 2024 - Present',
+    location: 'Vancouver, Canada'
+  },
+  {
     company: 'Galileo',
     role: 'Co-founder',
     shortDescription: 'Building an academic workspace with AI agents for course planning, exam generation, and concept podcasts.',
