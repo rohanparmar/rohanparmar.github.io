@@ -1,16 +1,29 @@
 import type { Metadata } from "next";
-import { Inter, Orbitron } from "next/font/google";
+import { Barlow, Barlow_Condensed, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import CyberspaceCanvas from "@/components/main/StarBackground";
-import Navbar from "@/components/main/Navbar";
-import Footer from "@/components/main/Footer";
 
-const inter = Inter({ subsets: ["latin"] });
-const orbitron = Orbitron({ subsets: ["latin"], variable: "--font-cyber" });
+const barlow = Barlow({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-sans",
+});
+
+const barlowCondensed = Barlow_Condensed({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-display",
+});
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-mono",
+});
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "Rohan Parmar's Portfolio",
+  title: "Rohan Parmar — Software Engineer",
+  description:
+    "Software engineer in Vancouver, BC. ML systems and full-stack products. Co-founder at Galileo.",
 };
 
 export default function RootLayout({
@@ -20,11 +33,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} ${orbitron.variable} bg-black overflow-y-scroll overflow-x-hidden`}>
-        <CyberspaceCanvas />
-        <Navbar />
+      <body
+        className={`${barlow.variable} ${barlowCondensed.variable} ${plexMono.variable} font-sans antialiased`}
+      >
         {children}
-        <Footer />
       </body>
     </html>
   );
