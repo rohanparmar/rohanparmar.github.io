@@ -2,7 +2,7 @@ export const siteMeta = {
   name: "Rohan Parmar",
   shortName: "R. PARMAR",
   drawingNo: "RP-01",
-  revision: "C",
+  revision: "E",
   title: "SOFTWARE + ML SYSTEMS",
   location: "VANCOUVER, BC",
   email: "rohanparmar@getdocula.com",
@@ -16,20 +16,46 @@ export interface Revision {
   role: string;
   date: string;
   location: string;
-  status: "IN PROGRESS" | "RELEASED";
+  status: "IN PROGRESS" | "RELEASED" | "ACQUIRED";
   notes: string[];
 }
 
 export const revisions: Revision[] = [
   {
+    rev: "E",
+    company: "Mecka AI",
+    role: "Software Engineer — via acquisition of Docula",
+    date: "2026 — PRESENT",
+    location: "TORONTO / NYC / REMOTE",
+    status: "IN PROGRESS",
+    notes: [
+      "Building the data layer for robotics: 3D human-motion data captured with iPhones and custom camera rigs by contributors across 12 countries, used to train humanoid and industrial robots.",
+      "Applying Docula's high-throughput data engine to normalize and QA massive volumes of motion data.",
+      "Joined through the Docula acquisition, on the heels of Mecka's $60M USD Series A.",
+    ],
+  },
+  {
+    rev: "D",
+    company: "Docula",
+    role: "Co-founder",
+    date: "2025 — 2026",
+    location: "VANCOUVER, BC",
+    status: "ACQUIRED",
+    notes: [
+      "Built a generative-AI data-processing engine for healthcare: ingest medical-billing records, normalize codes, run edits, benchmark fees, and produce defensible audit reports instantly.",
+      "Bootstrapped with a three-person team — no outside funding.",
+      "Acquired by Mecka AI in early 2026 for the team's expertise in processing massive volumes of data.",
+    ],
+  },
+  {
     rev: "C",
     company: "Galileo",
     role: "Co-founder",
-    date: "OCT 2024 — PRESENT",
+    date: "OCT 2024 — 2025",
     location: "VANCOUVER, BC",
-    status: "IN PROGRESS",
+    status: "RELEASED",
     notes: [
-      "Building an academic workspace with AI agents for course planning, exam generation, and concept podcasts.",
+      "Built an academic workspace with AI agents for course planning, exam generation, and concept podcasts.",
       "Next.js frontend, FastAPI backend; agents built with AutoGen and Pydantic, deployed on Modal for web inference.",
       "Supabase with pgvector for embeddings; interactions served through OpenRouter and LangChain, monitored with Langfuse.",
     ],

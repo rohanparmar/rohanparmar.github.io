@@ -5,15 +5,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        paper: "var(--paper)",
-        ink: "var(--ink)",
-        graphite: "var(--graphite)",
-        cobalt: {
-          DEFAULT: "var(--cobalt)",
-          deep: "var(--cobalt-deep)",
+        field: {
+          DEFAULT: "rgb(var(--field) / <alpha-value>)",
+          deep: "rgb(var(--field-deep) / <alpha-value>)",
         },
-        wash: "var(--wash)",
-        hairline: "var(--hairline)",
+        paper: "rgb(var(--paper) / <alpha-value>)",
+        mark: "rgb(var(--mark) / <alpha-value>)",
+        mist: "var(--mist)",
+        trace: "var(--trace)",
       },
       fontFamily: {
         display: ["var(--font-display)", "sans-serif"],

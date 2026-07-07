@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { siteMeta } from "@/constants/site";
+import { PlottedWord } from "./Plotted";
 
 const titleBlock = [
   { label: "UNIT", value: siteMeta.shortName },
@@ -30,55 +31,63 @@ const Hero = () => {
       initial={reduceMotion ? false : "hidden"}
       animate="visible"
       transition={{ staggerChildren: 0.07 }}
-      className="pb-20 pt-16 sm:pb-28 sm:pt-24"
+      className="relative pb-20 pt-16 sm:pb-28 sm:pt-24"
     >
+      {/* Soft print-exposure glow behind the name */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 -top-24 h-[480px] bg-[radial-gradient(60%_60%_at_40%_35%,rgba(126,158,255,0.30),transparent_70%)]"
+      />
+
       <motion.p
         variants={rise}
-        className="flex items-center gap-2.5 font-mono text-[11px] tracking-label text-graphite"
+        className="relative flex items-center gap-2.5 font-mono text-[11px] tracking-label text-mist"
       >
-        <span aria-hidden className="inline-flex h-2 w-2 rounded-full bg-cobalt" />
-        CURRENTLY BUILDING — GALILEO
+        <span aria-hidden className="inline-flex h-2 w-2 rounded-full bg-paper" />
+        CURRENTLY — MECKA AI, THE DATA LAYER FOR ROBOTICS
       </motion.p>
 
-      <h1 className="mt-8 font-display font-semibold uppercase leading-[0.88] tracking-tight text-ink">
-        <motion.span variants={rise} className="block text-[clamp(4.5rem,15vw,11.5rem)]">
-          Rohan
-        </motion.span>
-        <motion.span
-          variants={rise}
-          className="text-linework block text-[clamp(4.5rem,15vw,11.5rem)]"
-        >
-          Parmar
-        </motion.span>
+      <h1 className="relative mt-10">
+        <span className="sr-only">Rohan Parmar</span>
+        <PlottedWord
+          word="ROHAN"
+          className="gap-[0.06em] text-[clamp(3.8rem,13.5vw,11rem)] text-paper"
+        />
+        <PlottedWord
+          word="PARMAR"
+          delayOffset={5}
+          className="mt-[0.14em] gap-[0.06em] text-[clamp(3.8rem,13.5vw,11rem)] text-paper opacity-60"
+        />
       </h1>
 
       {/* Dimension line: the "measurement" of the unit above */}
-      <motion.div variants={rise} className="mt-10 max-w-[640px]" aria-hidden>
-        <div className="relative flex items-center">
-          <span className="h-3 w-px bg-cobalt" />
-          <span className="h-px flex-1 bg-cobalt" />
-          <span className="bg-paper px-3 font-mono text-[11px] tracking-label text-cobalt">
+      <motion.div variants={rise} className="relative mt-12 max-w-[640px]" aria-hidden>
+        <div className="flex items-center text-paper/80">
+          <span className="h-3 w-px bg-current" />
+          <span className="h-px flex-1 bg-current" />
+          <span className="px-3 font-mono text-[11px] tracking-label text-mist">
             SOFTWARE ENGINEER — ML SYSTEMS + FULL STACK
           </span>
-          <span className="h-px flex-1 bg-cobalt" />
-          <span className="h-3 w-px bg-cobalt" />
+          <span className="h-px flex-1 bg-current" />
+          <span className="h-3 w-px bg-current" />
         </div>
       </motion.div>
 
-      <div className="mt-10 flex flex-col justify-between gap-12 md:flex-row md:items-end">
+      <div className="relative mt-10 flex flex-col justify-between gap-12 md:flex-row md:items-end">
         <div className="max-w-[560px]">
-          <motion.p variants={rise} className="text-lg leading-relaxed text-graphite">
+          <motion.p variants={rise} className="text-lg leading-relaxed text-mist">
             I build machine-learning systems and the full-stack products around
-            them. Co-founder at{" "}
-            <span className="font-medium text-ink">Galileo</span>, an academic
-            workspace with AI agents. Computer science at Simon Fraser
-            University; previously at Workday and PayAmigo.
+            them. Co-founded <span className="font-medium text-paper">Docula</span>{" "}
+            — generative AI for medical billing — bootstrapped it with a
+            three-person team, and sold it to{" "}
+            <span className="font-medium text-paper">Mecka AI</span> in 2026.
+            Now processing the motion data that teaches robots to move.
           </motion.p>
 
           <motion.div variants={rise} className="mt-9 flex flex-wrap gap-3">
             <a
               href="#builds"
-              className="bg-cobalt px-6 py-3 font-mono text-[11px] tracking-label text-paper transition-colors hover:bg-cobalt-deep"
+              className="bg-paper px-6 py-3 font-mono text-[11px] tracking-label text-field transition-colors hover:bg-white"
             >
               VIEW DETAILS ↓
             </a>
@@ -86,7 +95,7 @@ const Hero = () => {
               href={siteMeta.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="border border-ink px-6 py-3 font-mono text-[11px] tracking-label text-ink transition-colors hover:border-cobalt hover:text-cobalt"
+              className="border border-trace px-6 py-3 font-mono text-[11px] tracking-label text-paper transition-colors hover:border-paper"
             >
               GITHUB ↗
             </a>
@@ -94,19 +103,16 @@ const Hero = () => {
         </div>
 
         {/* Title block */}
-        <motion.dl
-          variants={rise}
-          className="w-full max-w-[320px] border border-ink bg-paper"
-        >
+        <motion.dl variants={rise} className="w-full max-w-[320px] border border-paper/60">
           {titleBlock.map((row) => (
             <div
               key={row.label}
-              className="grid grid-cols-[88px_1fr] border-b border-hairline last:border-b-0"
+              className="grid grid-cols-[88px_1fr] border-b border-trace last:border-b-0"
             >
-              <dt className="border-r border-hairline px-3 py-2 font-mono text-[10px] tracking-label text-graphite">
+              <dt className="border-r border-trace px-3 py-2 font-mono text-[10px] tracking-label text-mist">
                 {row.label}
               </dt>
-              <dd className="px-3 py-2 font-mono text-[11px] font-medium tracking-wide text-ink">
+              <dd className="px-3 py-2 font-mono text-[11px] font-medium tracking-wide text-paper">
                 {row.value}
               </dd>
             </div>

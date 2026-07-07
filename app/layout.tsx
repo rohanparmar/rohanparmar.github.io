@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Barlow, Barlow_Condensed, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -19,6 +19,10 @@ const plexMono = IBM_Plex_Mono({
   weight: ["400", "500", "600"],
   variable: "--font-mono",
 });
+
+export const viewport: Viewport = {
+  themeColor: "#0531ac",
+};
 
 export const metadata: Metadata = {
   title: "Rohan Parmar — Software Engineer",

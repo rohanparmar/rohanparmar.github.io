@@ -19,7 +19,7 @@ const Notes = () => (
       <ol className="mt-8 space-y-4">
         {notes.map((note, index) => (
           <li key={note.label} className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-            <span className="font-mono text-[11px] tracking-label text-graphite">
+            <span className="font-mono text-[11px] tracking-label text-mist">
               {index + 1}. {note.label}
             </span>
             <a
@@ -27,7 +27,7 @@ const Notes = () => (
               {...(note.href.startsWith("mailto:")
                 ? {}
                 : { target: "_blank", rel: "noopener noreferrer" })}
-              className="font-mono text-sm text-ink underline-offset-4 transition-colors hover:text-cobalt hover:underline"
+              className="font-mono text-sm text-paper underline-offset-4 transition-colors hover:underline"
             >
               {note.value}
             </a>
@@ -35,12 +35,12 @@ const Notes = () => (
         ))}
       </ol>
 
-      <div className="mt-14 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-t border-hairline pt-6">
-        <p className="font-mono text-[10px] tracking-label text-graphite">
+      <div className="mt-14 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-t border-trace pt-6">
+        <p className="font-mono text-[10px] tracking-label text-mist">
           © 2026 {siteMeta.shortName} — ALL DIMENSIONS IN PIXELS UNLESS OTHERWISE NOTED
         </p>
-        <p className="font-mono text-[10px] tracking-label text-graphite">
-          REV {siteMeta.revision} · REDRAWN 2026
+        <p className="font-mono text-[10px] tracking-label text-mist">
+          REV {siteMeta.revision} · PRINTED 2026
         </p>
       </div>
     </Reveal>

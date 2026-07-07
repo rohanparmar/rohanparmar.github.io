@@ -14,12 +14,12 @@ const Materials = () => (
         {materials.map((row) => (
           <div
             key={row.label}
-            className="grid gap-x-8 gap-y-1 border-b border-hairline py-5 sm:grid-cols-[200px_1fr]"
+            className="grid gap-x-8 gap-y-1 border-b border-trace py-5 sm:grid-cols-[200px_1fr]"
           >
-            <dt className="font-mono text-[11px] leading-6 tracking-label text-graphite">
+            <dt className="font-mono text-[11px] leading-6 tracking-label text-mist">
               {row.label}
             </dt>
-            <dd className="flex flex-wrap gap-x-7 gap-y-1 font-medium text-ink">
+            <dd className="flex flex-wrap gap-x-7 gap-y-1 font-medium text-paper">
               {row.items.map((item) => (
                 <span key={item}>{item}</span>
               ))}
