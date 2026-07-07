@@ -1,33 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Barlow, Barlow_Condensed, IBM_Plex_Mono } from "next/font/google";
+import { Newsreader } from "next/font/google";
 import "./globals.css";
 
-const barlow = Barlow({
+const newsreader = Newsreader({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-sans",
-});
-
-const barlowCondensed = Barlow_Condensed({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-display",
-});
-
-const plexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
+  style: ["normal", "italic"],
   weight: ["400", "500", "600"],
-  variable: "--font-mono",
+  variable: "--font-serif",
 });
 
 export const viewport: Viewport = {
-  themeColor: "#0531ac",
+  themeColor: "#ffffff",
 };
 
 export const metadata: Metadata = {
-  title: "Rohan Parmar — Software Engineer",
+  title: "Rohan Parmar",
   description:
-    "Software engineer in Vancouver, BC. ML systems and full-stack products. Co-founder at Galileo.",
+    "Software engineer in Vancouver. Co-founded Docula, acquired by Mecka AI in 2026.",
 };
 
 export default function RootLayout({
@@ -37,11 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${barlow.variable} ${barlowCondensed.variable} ${plexMono.variable} font-sans antialiased`}
-      >
-        {children}
-      </body>
+      <body className={`${newsreader.variable} font-serif`}>{children}</body>
     </html>
   );
 }
