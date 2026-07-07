@@ -1,4 +1,4 @@
-import { siteMeta, work, projects } from "@/constants/site";
+import { siteMeta, work } from "@/constants/site";
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="mt-14">
@@ -38,19 +38,6 @@ export default function Home() {
               <span>
                 <span className="font-medium">{item.company}.</span> {item.line}
               </span>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      <Section title="Projects">
-        <ul className="space-y-4">
-          {projects.map((project) => (
-            <li key={project.title}>
-              <a href={project.link} target="_blank" rel="noopener noreferrer" className="font-medium">
-                {project.title}
-              </a>{" "}
-              {project.line}
             </li>
           ))}
         </ul>

@@ -38,32 +38,3 @@ export const work: WorkItem[] = [
     line: "Software engineer intern. Built an X2 extension saving ~7,500 hours a year; cut key page loads by 90%.",
   },
 ];
-
-export interface Project {
-  title: string;
-  line: string;
-  link: string;
-}
-
-export const projects: Project[] = [
-  {
-    title: "In-memory time-series database",
-    line: "Modern C++ — columnar storage, parallel compression, lock-free ingestion.",
-    link: "https://github.com/rohanparmar/tsdb",
-  },
-  {
-    title: "The Gem in I",
-    line: "Conversational language practice on Gemini, with real-time speech in and out.",
-    link: "https://github.com/rohanparmar/gem-in-i",
-  },
-  {
-    title: "Duplicate-issue detection for GitHub",
-    line: "Document-level SBERT embeddings; evaluated on F1, cross-entropy, ROC-AUC.",
-    link: "https://github.com/rohanparmar/Document-Level-Embeddings-for-Github-Duplicate-Issues-Detection",
-  },
-  {
-    title: "EnounceAI",
-    line: "English-semantics tutor for immigrants — GPT-3 generates material, BERT scores it.",
-    link: "https://github.com/rohanparmar/enounceai",
-  },
-];
