@@ -11,9 +11,8 @@ export default function Home() {
   return (
     <main className="mx-auto max-w-[41rem] px-6 pb-24 pt-20 text-[17.5px] leading-[1.65] sm:pt-28">
       <h1 className="text-[30px] font-medium leading-tight">Rohan Parmar</h1>
-      <p className="mt-1 text-muted">Software engineer, Vancouver</p>
 
-      <div className="mt-10 space-y-5">
+      <div className="mt-8 space-y-5">
         <p>
           I build machine-learning systems and the products around them. In 2025
           I co-founded <span className="font-medium">Docula</span>, a
