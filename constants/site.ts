@@ -15,7 +15,7 @@ export const work: WorkItem[] = [
   {
     period: "2026–",
     company: "Mecka AI",
-    line: "Data platform for robotics — normalizing 3D human-motion data collected across 12 countries.",
+    line: "Engineer #7 — scaling human data for robotics.",
   },
   {
     period: "2025–26",
