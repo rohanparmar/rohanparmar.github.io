@@ -2,7 +2,7 @@ export const siteMeta = {
   name: "Rohan Parmar",
   email: "rohanparmar@getdocula.com",
   github: "https://github.com/rohanparmar",
-  linkedin: "https://www.linkedin.com/in/rohanparmar",
+  linkedin: "https://www.linkedin.com/in/rohanxparmar",
 };
 
 export interface WorkItem {
