@@ -1,0 +1,108 @@
+name: Fetch open Whisper runtime
+
+on:
+  push:
+    branches:
+      - chatgpt-model-download-links-20260812
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Download whisper.cpp Ubuntu runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p bundle/runtime bundle/model-parts
+          curl -L --fail --retry 5 --retry-delay 3 \
+            -o /tmp/whisper-bin.tar.gz \
+            https://github.com/ggml-org/whisper.cpp/releases/download/v1.9.2/whisper-bin-ubuntu-x64.tar.gz
+          tar -xzf /tmp/whisper-bin.tar.gz -C bundle/runtime
+
+      - name: Download open Whisper large-v3-turbo Q5 model
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 5 --retry-delay 3 \
+            -o /tmp/ggml-large-v3-turbo-q5_0.bin \
+            'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo-q5_0.bin?download=true'
+          sha256sum /tmp/ggml-large-v3-turbo-q5_0.bin | tee bundle/model.sha256
+          split -b 90M -d -a 2 /tmp/ggml-large-v3-turbo-q5_0.bin bundle/model-parts/model.part-
+          find bundle/model-parts -type f -printf '%f %s bytes\n' | sort
+
+      - name: Upload runtime
+        uses: actions/upload-artifact@v4
+        with:
+          name: whisper-runtime
+          path: bundle/runtime
+          compression-level: 0
+          retention-days: 1
+
+      - name: Upload model checksum
+        uses: actions/upload-artifact@v4
+        with:
+          name: whisper-model-checksum
+          path: bundle/model.sha256
+          compression-level: 0
+          retention-days: 1
+
+      - name: Upload model part 00
+        uses: actions/upload-artifact@v4
+        with:
+          name: whisper-model-part-00
+          path: bundle/model-parts/model.part-00
+          compression-level: 0
+          retention-days: 1
+
+      - name: Upload model part 01
+        uses: actions/upload-artifact@v4
+        with:
+          name: whisper-model-part-01
+          path: bundle/model-parts/model.part-01
+          compression-level: 0
+          retention-days: 1
+
+      - name: Upload model part 02
+        uses: actions/upload-artifact@v4
+        with:
+          name: whisper-model-part-02
+          path: bundle/model-parts/model.part-02
+          compression-level: 0
+          retention-days: 1
+
+      - name: Upload model part 03
+        uses: actions/upload-artifact@v4
+        with:
+          name: whisper-model-part-03
+          path: bundle/model-parts/model.part-03
+          compression-level: 0
+          retention-days: 1
+
+      - name: Upload model part 04
+        uses: actions/upload-artifact@v4
+        with:
+          name: whisper-model-part-04
+          path: bundle/model-parts/model.part-04
+          compression-level: 0
+          retention-days: 1
+
+      - name: Upload model part 05
+        uses: actions/upload-artifact@v4
+        with:
+          name: whisper-model-part-05
+          path: bundle/model-parts/model.part-05
+          compression-level: 0
+          retention-days: 1
+
+      - name: Upload model part 06
+        uses: actions/upload-artifact@v4
+        with:
+          name: whisper-model-part-06
+          path: bundle/model-parts/model.part-06
+          compression-level: 0
+          retention-days: 1
